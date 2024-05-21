@@ -10,35 +10,36 @@ models = [
     "meta.llama3-70b-instruct-v1:0",
 ]
 
+prices = {
+    "mistral.mistral-7b-instruct-v0:2": {
+        "input": 0.00015,
+        "output": 0.0002,
+    },
+    "mistral.mixtral-8x7b-instruct-v0:1": {
+        "input": 0.00045,
+        "output": 0.0007,
+    },
+    "mistral.mistral-large-2402-v1:0": {
+        "input": 0.008,
+        "output": 0.024,
+    },
+    "meta.llama3-8b-instruct-v1:0": {
+        "input": 0.0004,
+        "output": 0.0006,
+    },
+    "meta.llama3-70b-instruct-v1:0": {
+        "input": 0.00265,
+        "output": 0.0035,
+    },
+}
+
 
 def get_model_price(model_name: str, num_tokens: int, in_or_out: str) -> float:
     """
     Returns the price of the model given the number of tokens.
     """
-
-    # pricing is per 1000 tokens
-    prices = {
-        "mistral.mistral-7b-instruct-v0:2": {
-            "input": 0.00015,
-            "output": 0.0002,
-        },
-        "mistral.mixtral-8x7b-instruct-v0:1": {
-            "input": 0.00045,
-            "output": 0.0007,
-        },
-        "mistral.mistral-large-2402-v1:0": {
-            "input": 0.008,
-            "output": 0.024,
-        },
-        "meta.llama3-8b-instruct-v1:0": {
-            "input": 0.0004,
-            "output": 0.0006,
-        },
-        "meta.llama3-70b-instruct-v1:0": {
-            "input": 0.00265,
-            "output": 0.0035,
-        },
-    }
+    if model_name not in prices:
+        raise ValueError(f"Invalid model name: {model_name}")
 
     price = num_tokens / 1000 * prices[model_name][in_or_out]
     return price
@@ -52,13 +53,23 @@ def count_tokens(text, encoding):
 
 
 def main():
+    """
+    Main function that loads an XLSX file, counts the total number of tokens,
+    and calculates the price for each model.
+    """
     if len(sys.argv) != 2:
         print("Usage: python script.py <xlsx_file>")
         sys.exit(1)
+
+    file_path = sys.argv[1]
+    if not file_path.endswith(".xlsx"):
+        print("Input file must be an XLSX file.")
+        sys.exit(1)
+
     try:
-        workbook = load_workbook(sys.argv[1], read_only=True, data_only=True)
+        workbook = load_workbook(file_path, read_only=True, data_only=True)
         total_tokens = 0
-        encoding = tiktoken.get_encoding("gpt2")
+        encoding = tiktoken.get_encoding("cl100k_base")
 
         for sheet in workbook:
             sheet_tokens = 0
