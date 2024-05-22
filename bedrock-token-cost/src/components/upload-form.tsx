@@ -69,10 +69,10 @@ const countTokens = (text: string | null, encoding: any): number => {
 export function UploadForm() {
   const [totalTokens, setTotalTokens] = useState<number | null>(null);
   const [prices, setPrices] = useState<{ [key: string]: number }>({});
+  const [calculating, setCalculating] = useState(false);
 
-  const handleSubmit = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleSubmit = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCalculating(true);
     const file = event.target.files?.[0];
     if (!file || !file.name.endsWith(".xlsx")) {
       alert("Please upload a valid XLSX file.");
@@ -102,23 +102,33 @@ export function UploadForm() {
       });
 
       setPrices(priceCalculations);
+      setCalculating(false);
     } catch (error) {
       alert(`An error occurred: ${error}`);
     }
   };
+
+  if (calculating) {
+    return (
+      <div className="mx-auto max-w-md space-y-6 py-12 text-center">
+        <h1 className="text-3xl font-bold">Calculating...</h1>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-md space-y-6 py-12">
       <div className="space-y-2 text-center">
         <h1 className="text-3xl font-bold">File Upload</h1>
         <p className="text-gray-500 dark:text-gray-400">
-          Upload a file and select a language model to estimate the token cost.
+          Any project can be estimated accurately{" "}
+          <span className="italic">(once it's completed)!</span>
         </p>
       </div>
       <form className="space-y-4">
         <div className="grid gap-2">
           <Label htmlFor="file">File</Label>
-          <Input id="file" type="file" />
+          <Input id="file" type="file" onChange={handleSubmit} />
         </div>
         <div className="grid gap-2">
           <Label htmlFor="model">Language Model</Label>
@@ -141,19 +151,21 @@ export function UploadForm() {
         <div className="grid gap-2">
           <Label htmlFor="cost">Estimated Token Cost</Label>
           {Object.keys(prices).map((model) => (
-            <Input
-              key={model}
-              id={model}
-              placeholder="$0.00"
-              readOnly
-              type="text"
-              value={prices[model]}
-            />
+            <>
+              <Label key={model} htmlFor={model}>
+                {model}
+              </Label>
+              <Input
+                key={model}
+                id={model}
+                placeholder="$0.00"
+                readOnly
+                type="text"
+                value={prices[model]}
+              />
+            </>
           ))}
         </div>
-        <Button className="w-full" type="submit" onClick={handleSubmit}>
-          Estimate Cost
-        </Button>
       </form>
     </div>
   );
