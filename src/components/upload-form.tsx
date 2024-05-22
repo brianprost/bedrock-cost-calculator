@@ -10,6 +10,7 @@ import {
 } from "@/lib/models";
 import React, { useState } from "react";
 import ExcelJS from "exceljs";
+import Papa from "papaparse";
 import * as tiktoken from "tiktoken";
 
 export function UploadForm() {
@@ -26,26 +27,40 @@ export function UploadForm() {
   const handleSubmit = async (event: React.ChangeEvent<HTMLInputElement>) => {
     setCalculating(true);
     const file = event.target.files?.[0];
-    if (!file || !file.name.endsWith(".xlsx")) {
-      alert("Please upload a valid XLSX file.");
-      reset();
+    if (!file || !(file.name.endsWith(".xlsx") || file.name.endsWith(".csv"))) {
+      alert("Please upload a valid XLSX or CSV file.");
       return;
     }
 
     try {
-      const arrayBuffer = await file.arrayBuffer();
-      const workbook = new ExcelJS.Workbook();
-      await workbook.xlsx.load(arrayBuffer);
       const encoding = tiktoken.get_encoding("cl100k_base");
       let totalTokens = 0;
 
-      workbook.eachSheet((sheet) => {
-        sheet.eachRow((row) => {
-          row.eachCell((cell) => {
-            totalTokens += countTokens(cell.value?.toString() || "", encoding);
+      if (file.name.endsWith(".xlsx")) {
+        const arrayBuffer = await file.arrayBuffer();
+        const workbook = new ExcelJS.Workbook();
+        await workbook.xlsx.load(arrayBuffer);
+
+        workbook.eachSheet((sheet) => {
+          sheet.eachRow((row) => {
+            row.eachCell((cell) => {
+              totalTokens += countTokens(
+                cell.value?.toString() || "",
+                encoding
+              );
+            });
           });
         });
-      });
+      } else if (file.name.endsWith(".csv")) {
+        const text = await file.text();
+        const results = Papa.parse<string[]>(text, { header: false });
+
+        results.data.forEach((row) => {
+          row.forEach((cell) => {
+            totalTokens += countTokens(cell, encoding);
+          });
+        });
+      }
 
       setTotalTokens(totalTokens);
 
