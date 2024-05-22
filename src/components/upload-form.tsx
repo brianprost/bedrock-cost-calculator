@@ -88,7 +88,7 @@ export function UploadForm() {
     <div className="mx-auto max-w-md space-y-6 py-12">
       <div className="space-y-2 text-center">
         <h1 className="text-6xl font-extrabold text-primary">
-          Bedrock Token Estimator
+          Bedrock Cost Calculator
         </h1>
         <p className="text-gray-500 dark:text-gray-400 text-accent">
           Any project can be estimated accurately{" "}
