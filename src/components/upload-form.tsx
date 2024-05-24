@@ -8,7 +8,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { calculateTokenCost } from "@/lib/calculators";
 
 export function UploadForm() {
-  const [totalTokens, setTotalTokens] = useState<number | null>(null);
+  const [inputTokens, setInputTokens] = useState<number | null>(null);
+  const [outputTokens, setOutputTokens] = useState<number | null>(null);
+  const hasBothTokens = inputTokens && outputTokens;
   const [inputPrices, setInputPrices] = useState<{ [key: string]: number }>({});
   const [outputPrices, setOutputPrices] = useState<{ [key: string]: number }>(
     {}
@@ -16,7 +18,8 @@ export function UploadForm() {
   const [calculating, setCalculating] = useState(false);
 
   const reset = () => {
-    setTotalTokens(null);
+    setInputTokens(null);
+    setOutputTokens(null);
     setInputPrices({});
     setOutputPrices({});
     setCalculating(false);
@@ -31,9 +34,10 @@ export function UploadForm() {
     }
 
     try {
-      const { totalTokens, inputPrices, outputPrices } =
+      const { inputTokens, outputTokens, inputPrices, outputPrices } =
         await calculateTokenCost(file);
-      setTotalTokens(totalTokens);
+      setInputTokens(inputTokens);
+      setOutputTokens(outputTokens);
       setInputPrices(inputPrices);
       setOutputPrices(outputPrices);
       setCalculating(false);
@@ -45,7 +49,7 @@ export function UploadForm() {
   if (calculating) {
     return (
       <div className="mx-auto max-w-md space-y-6 py-12 text-center">
-        <h1 className="text-3xl font-bold animate-pulse">Calculating...</h1>
+        <h1 className="text-3xl font-bold animate-pulse">Solving today's Wordle...</h1>
       </div>
     );
   }
@@ -62,13 +66,13 @@ export function UploadForm() {
         </p>
       </div>
       <form className="space-y-4">
-        {!totalTokens && (
+        {!hasBothTokens && (
           <div className="grid gap-2">
             <Label htmlFor="file">File</Label>
             <Input id="file" type="file" onChange={handleSubmit} />
           </div>
         )}
-        {totalTokens && (
+        {hasBothTokens && (
           <>
             <Tabs defaultValue={"input"}>
               <TabsList className="grid w-full grid-cols-2 bg-primary/30 text-primary">
@@ -78,11 +82,14 @@ export function UploadForm() {
               <TabsContent value={"input"}>
                 <div className="grid gap-2">
                   <Label htmlFor="cost" className="mb-6">
-                    Estimated Token Input Cost for {totalTokens} tokens
+                    Estimated Token Input Cost for {inputTokens} tokens
                   </Label>
                   <div className="grid grid-cols-2 gap-2">
                     {Object.keys(inputPrices).map((model, index) => (
-                      <div className="flex flex-col gap-2" key={`input_${index}`}>
+                      <div
+                        className="flex flex-col gap-2"
+                        key={`input_${index}`}
+                      >
                         <Label key={model} htmlFor={model} className="text-lg">
                           {getModelLabel(model as ModelName)}
                         </Label>
@@ -102,7 +109,7 @@ export function UploadForm() {
               <TabsContent value={"output"}>
                 <div className="grid gap-2">
                   <Label htmlFor="cost" className="mb-6">
-                    Estimated Token Output Cost for {totalTokens} tokens
+                    Estimated Token Output Cost for {outputTokens} tokens
                   </Label>
                   <div className="grid grid-cols-2 gap-2">
                     {Object.keys(outputPrices).map((model, index) => (
