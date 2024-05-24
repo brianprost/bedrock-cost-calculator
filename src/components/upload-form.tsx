@@ -1,19 +1,11 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  models,
-  getModelPrice,
-  getModelLabel,
-  countTokens,
-  type ModelName,
-} from "@/lib/models";
+import { getModelLabel, type ModelName } from "@/lib/models";
 import React, { useState } from "react";
-import ExcelJS from "exceljs";
-import Papa from "papaparse";
-import * as tiktoken from "tiktoken";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { calculateTokenCost } from "@/lib/calculators";
 
 export function UploadForm() {
   const [totalTokens, setTotalTokens] = useState<number | null>(null);
@@ -39,56 +31,11 @@ export function UploadForm() {
     }
 
     try {
-      const encoding = tiktoken.get_encoding("cl100k_base");
-      let totalTokens = 0;
-
-      if (file.name.endsWith(".xlsx")) {
-        const arrayBuffer = await file.arrayBuffer();
-        const workbook = new ExcelJS.Workbook();
-        await workbook.xlsx.load(arrayBuffer);
-
-        workbook.eachSheet((sheet) => {
-          sheet.eachRow((row) => {
-            row.eachCell((cell) => {
-              totalTokens += countTokens(
-                cell.value?.toString() || "",
-                encoding
-              );
-            });
-          });
-        });
-      } else if (file.name.endsWith(".csv")) {
-        const text = await file.text();
-        const results = Papa.parse<string[]>(text, { header: false });
-
-        results.data.forEach((row) => {
-          row.forEach((cell) => {
-            totalTokens += countTokens(cell, encoding);
-          });
-        });
-      }
-
+      const { totalTokens, inputPrices, outputPrices } =
+        await calculateTokenCost(file);
       setTotalTokens(totalTokens);
-
-      const inputPriceCalculations: { [key: string]: number } = {};
-      models.forEach((model) => {
-        inputPriceCalculations[model] = getModelPrice(
-          model,
-          totalTokens,
-          "input"
-        );
-      });
-      setInputPrices(inputPriceCalculations);
-
-      const outputPriceCalculations: { [key: string]: number } = {};
-      models.forEach((model) => {
-        outputPriceCalculations[model] = getModelPrice(
-          model,
-          totalTokens,
-          "output"
-        );
-      });
-      setOutputPrices(outputPriceCalculations);
+      setInputPrices(inputPrices);
+      setOutputPrices(outputPrices);
       setCalculating(false);
     } catch (error) {
       alert(`An error occurred: ${error}`);
@@ -134,8 +81,8 @@ export function UploadForm() {
                     Estimated Token Input Cost for {totalTokens} tokens
                   </Label>
                   <div className="grid grid-cols-2 gap-2">
-                    {Object.keys(inputPrices).map((model) => (
-                      <div className="flex flex-col gap-2">
+                    {Object.keys(inputPrices).map((model, index) => (
+                      <div className="flex flex-col gap-2" key={`input_${index}`}>
                         <Label key={model} htmlFor={model} className="text-lg">
                           {getModelLabel(model as ModelName)}
                         </Label>
@@ -158,8 +105,11 @@ export function UploadForm() {
                     Estimated Token Output Cost for {totalTokens} tokens
                   </Label>
                   <div className="grid grid-cols-2 gap-2">
-                    {Object.keys(outputPrices).map((model) => (
-                      <div className="flex flex-col gap-2">
+                    {Object.keys(outputPrices).map((model, index) => (
+                      <div
+                        className="flex flex-col gap-2"
+                        key={`output_${index}`}
+                      >
                         <Label key={model} htmlFor={model} className="text-lg">
                           {getModelLabel(model as ModelName)}
                         </Label>
