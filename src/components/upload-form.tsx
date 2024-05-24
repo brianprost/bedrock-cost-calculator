@@ -13,14 +13,20 @@ import ExcelJS from "exceljs";
 import Papa from "papaparse";
 import * as tiktoken from "tiktoken";
 
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 export function UploadForm() {
   const [totalTokens, setTotalTokens] = useState<number | null>(null);
-  const [prices, setPrices] = useState<{ [key: string]: number }>({});
+  const [inputPrices, setInputPrices] = useState<{ [key: string]: number }>({});
+  const [outputPrices, setOutputPrices] = useState<{ [key: string]: number }>(
+    {}
+  );
   const [calculating, setCalculating] = useState(false);
 
   const reset = () => {
     setTotalTokens(null);
-    setPrices({});
+    setInputPrices({});
+    setOutputPrices({});
     setCalculating(false);
   };
 
@@ -64,12 +70,25 @@ export function UploadForm() {
 
       setTotalTokens(totalTokens);
 
-      const priceCalculations: { [key: string]: number } = {};
+      const inputPriceCalculations: { [key: string]: number } = {};
       models.forEach((model) => {
-        priceCalculations[model] = getModelPrice(model, totalTokens, "input");
+        inputPriceCalculations[model] = getModelPrice(
+          model,
+          totalTokens,
+          "input"
+        );
       });
+      setInputPrices(inputPriceCalculations);
 
-      setPrices(priceCalculations);
+      const outputPriceCalculations: { [key: string]: number } = {};
+      models.forEach((model) => {
+        outputPriceCalculations[model] = getModelPrice(
+          model,
+          totalTokens,
+          "output"
+        );
+      });
+      setOutputPrices(outputPriceCalculations);
       setCalculating(false);
     } catch (error) {
       alert(`An error occurred: ${error}`);
@@ -103,31 +122,66 @@ export function UploadForm() {
           </div>
         )}
         {totalTokens && (
-          <div className="grid gap-2">
-            <Label htmlFor="cost" className="mb-6">
-              Estimated Token Input Cost for {totalTokens} tokens
-            </Label>
-            <div className="grid grid-cols-2 gap-2">
-              {Object.keys(prices).map((model) => (
-                <div className="flex flex-col gap-2">
-                  <Label key={model} htmlFor={model} className="text-lg">
-                    {getModelLabel(model as ModelName)}
+          <>
+            <Tabs defaultValue={"input"}>
+              <TabsList className="grid w-full grid-cols-2 bg-primary/30 text-primary">
+                <TabsTrigger value={"input"}>Input</TabsTrigger>
+                <TabsTrigger value={"output"}>Output</TabsTrigger>
+              </TabsList>
+              <TabsContent value={"input"}>
+                <div className="grid gap-2">
+                  <Label htmlFor="cost" className="mb-6">
+                    Estimated Token Input Cost for {totalTokens} tokens
                   </Label>
-                  <Input
-                    key={model}
-                    id={model}
-                    placeholder="$0.00"
-                    readOnly
-                    type="text"
-                    value={`$ ${prices[model].toFixed(2)}`}
-                  />
+                  <div className="grid grid-cols-2 gap-2">
+                    {Object.keys(inputPrices).map((model) => (
+                      <div className="flex flex-col gap-2">
+                        <Label key={model} htmlFor={model} className="text-lg">
+                          {getModelLabel(model as ModelName)}
+                        </Label>
+                        <Input
+                          key={model}
+                          id={model}
+                          placeholder="$0.00"
+                          readOnly
+                          type="text"
+                          value={`$ ${inputPrices[model].toFixed(2)}`}
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              ))}
-            </div>
-            <Button variant={"destructive"} onClick={reset}>
+              </TabsContent>
+              <TabsContent value={"output"}>
+                <div className="grid gap-2">
+                  <Label htmlFor="cost" className="mb-6">
+                    Estimated Token Output Cost for {totalTokens} tokens
+                  </Label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {Object.keys(outputPrices).map((model) => (
+                      <div className="flex flex-col gap-2">
+                        <Label key={model} htmlFor={model} className="text-lg">
+                          {getModelLabel(model as ModelName)}
+                        </Label>
+                        <Input
+                          key={model}
+                          id={model}
+                          placeholder="$0.00"
+                          readOnly
+                          type="text"
+                          value={`$ ${outputPrices[model].toFixed(2)}`}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
+
+            <Button variant={"destructive"} onClick={reset} className="w-full">
               Reset
             </Button>
-          </div>
+          </>
         )}
       </form>
     </div>
