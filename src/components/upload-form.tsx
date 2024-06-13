@@ -49,7 +49,9 @@ export function UploadForm() {
   if (calculating) {
     return (
       <div className="mx-auto max-w-md space-y-6 py-12 text-center">
-        <h1 className="text-3xl font-bold animate-pulse">Solving today's Wordle...</h1>
+        <h1 className="text-3xl font-bold animate-pulse">
+          Solving today's Wordle...
+        </h1>
       </div>
     );
   }
@@ -61,8 +63,9 @@ export function UploadForm() {
           Bedrock Cost Calculator
         </h1>
         <p className="text-gray-500 dark:text-gray-400 text-accent">
-          Any project can be estimated accurately{" "}
-          <span className="italic">(once it's completed)!</span>
+          Upload an XLSX file with two sheets, one named{" "}
+          <span className="font-mono">input</span> and the other named{" "}
+          <span className="font-mono">output</span>.
         </p>
       </div>
       <form className="space-y-4">
