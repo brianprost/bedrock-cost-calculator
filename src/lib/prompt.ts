@@ -5,20 +5,18 @@ const encoding = tiktoken.get_encoding("cl100k_base");
 const inputTokenCount = 850;
 console.log(`input_token_count (including prompt): ${inputTokenCount}`);
 const outputTokenCount = 1;
-console.log(`output_token_count: ${outputTokenCount}`)
+console.log(`output_token_count: ${outputTokenCount}`);
 const numOccupations = 1000;
-console.log(`num_occupations: ${numOccupations}`)
+console.log(`num_occupations: ${numOccupations}`);
 const numWorkStyles = 21;
-console.log(`num_work_styles: ${numWorkStyles}`)
+console.log(`num_work_styles: ${numWorkStyles}`);
 const numPromptTemplates = 5;
-console.log(`num_prompt_templates: ${numPromptTemplates}`)
+console.log(`num_prompt_templates: ${numPromptTemplates}`);
 const numHyperparameterCombos = 20;
-console.log(`num_hyperparameter_combos: ${numHyperparameterCombos}`)
-const numRuns = numOccupations * numWorkStyles * numPromptTemplates * numHyperparameterCombos;
-console.log(`num_runs: ${numRuns}`)
-
-const totalTokens = inputTokenCount * numRuns;
-console.log(`total_tokens: ${totalTokens}`)
+console.log(`num_hyperparameter_combos: ${numHyperparameterCombos}`);
+const numRuns =
+  numOccupations * numWorkStyles * numPromptTemplates * numHyperparameterCombos;
+console.log(`num_runs: ${numRuns}`);
 
 const inputPriceCalculations: { [key: string]: string } = {};
 models.forEach((model) => {
@@ -40,3 +38,5 @@ models.forEach((model) => {
 
 console.log({ inputPriceCalculations });
 console.log({ outputPriceCalculations });
+const totalTokens = (inputTokenCount + outputTokenCount) * numRuns;
+console.log(`total_tokens: (input + output) * num_runs = ${totalTokens}`);
