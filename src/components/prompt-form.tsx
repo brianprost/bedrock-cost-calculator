@@ -18,7 +18,7 @@ export function PromptForm() {
     {}
   );
 
-  const handleSubmit = async (event: React.FormEvent<HTMLInputElement>) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setCalculating(true);
 
