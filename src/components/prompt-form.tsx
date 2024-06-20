@@ -1,12 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AutosizeTextarea } from "./ui/autosize-textarea";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
-import {
-  calculatePromptCost,
-  calculateTokenCost,
-  getTokenCount,
-} from "@/lib/calculators";
+import { calculatePromptCost } from "@/lib/calculators";
 import { ModelName, getModelLabel } from "@/lib/models";
 import { Input } from "./ui/input";
 
@@ -18,7 +14,8 @@ export function PromptForm() {
     {}
   );
 
-  const handleSubmit = async (event) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleSubmit = async (event: any) => {
     event.preventDefault();
     setCalculating(true);
 
