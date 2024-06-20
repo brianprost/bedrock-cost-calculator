@@ -3,6 +3,21 @@ import Papa from "papaparse";
 import * as tiktoken from "tiktoken";
 import { countTokens, models, getModelPrice } from "./models";
 
+export async function calculatePromptCost(prompt: string) {
+  const encoding = tiktoken.get_encoding("cl100k_base");
+  const inputTokens = countTokens(prompt, encoding);
+
+  const inputPriceCalculations: { [key: string]: number } = {};
+  models.forEach((model) => {
+    inputPriceCalculations[model] = getModelPrice(model, inputTokens, "input");
+  });
+
+  return {
+    inputTokens,
+    inputPrices: inputPriceCalculations,
+  };
+}
+
 export async function calculateTokenCost(file: File): Promise<{
   inputTokens: number;
   outputTokens: number;
@@ -69,4 +84,9 @@ export async function calculateTokenCost(file: File): Promise<{
     inputPrices: inputPriceCalculations,
     outputPrices: outputPriceCalculations,
   };
+}
+
+export function getTokenCount(text: string): number {
+  const encoding = tiktoken.get_encoding("cl100k_base");
+  return countTokens(text, encoding);
 }

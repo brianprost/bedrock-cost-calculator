@@ -99,8 +99,8 @@ export const countTokens = (text: string | null, encoding: any): number => {
 };
 
 // (async () => {
-//   const inputTokenCount = 585 * 6300000;
-//   const outputTokenCount = 10 * 6300000;
+//   const inputTokenCount = 585 * 2100000;
+//   const outputTokenCount = 10 * 2100000;
 
 //   const inputPriceCalculations: { [key: string]: string } = {};
 //   models.forEach((model) => {
