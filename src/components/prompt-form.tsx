@@ -78,7 +78,7 @@ export function PromptForm() {
                   placeholder="$0.00"
                   readOnly
                   type="text"
-                  value={`$ ${promptPrices[model].toFixed(2)}`}
+                  value={`$ ${promptPrices[model].toFixed(4)}`}
                 />
               </div>
             ))}

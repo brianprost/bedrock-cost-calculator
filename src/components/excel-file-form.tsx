@@ -123,7 +123,7 @@ export function ExcelFileForm() {
                           placeholder="$0.00"
                           readOnly
                           type="text"
-                          value={`$ ${outputPrices[model].toFixed(2)}`}
+                          value={`$ ${outputPrices[model].toFixed(4)}`}
                         />
                       </div>
                     ))}
