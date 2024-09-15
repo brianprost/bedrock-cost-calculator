@@ -42,9 +42,9 @@ export function PromptForm() {
   }
 
   return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <Label htmlFor="text" className="text-accent w-[100vw]">
+    <div className="flex gap-6">
+      <div className="w-1/2">
+        <Label htmlFor="text" className="text-accent">
           Text
         </Label>
         <AutosizeTextarea
@@ -52,39 +52,43 @@ export function PromptForm() {
           value={promptText}
           onChange={(e) => setPromptText(e.target.value)}
           placeholder="Paste text here"
+          className="h-full"
         />
-        <Button
-          className="w-1/2 mx-auto flex my-4"
-          variant={"default"}
-          type="submit"
-        >
-          Calculate
-        </Button>
-      </form>
-      {!!promptPrices && !!tokenCount && (
-        <div className="grid gap-2">
-          <Label htmlFor="cost" className="mb-6">
-            Estimated Token Input Cost for {tokenCount} tokens
-          </Label>
-          <div className="grid grid-cols-2 gap-2">
-            {Object.keys(promptPrices).map((model, index) => (
-              <div className="flex flex-col gap-2" key={`input_${index}`}>
-                <Label key={model} htmlFor={model} className="text-lg">
-                  {getModelLabel(model as ModelName)}
-                </Label>
-                <Input
-                  key={model}
-                  id={model}
-                  placeholder="$0.00"
-                  readOnly
-                  type="text"
-                  value={`$ ${promptPrices[model].toFixed(4)}`}
-                />
-              </div>
-            ))}
+      </div>
+      <div className="w-1/2">
+        <form onSubmit={handleSubmit} className="my-6">
+          <Button
+            className="w-full"
+            variant={"default"}
+            type="submit"
+          >
+            Calculate
+          </Button>
+        </form>
+        {!!promptPrices && !!tokenCount && (
+          <div className="grid gap-2">
+            <Label htmlFor="cost" className="mb-2">
+              Estimated Token Input Cost for {tokenCount} tokens
+            </Label>
+            <div className="grid grid-cols-2 gap-2">
+              {Object.keys(promptPrices).map((model, index) => (
+                <div className="flex flex-col gap-1" key={`input_${index}`}>
+                  <Label htmlFor={model} className="text-sm">
+                    {getModelLabel(model as ModelName)}
+                  </Label>
+                  <Input
+                    id={model}
+                    placeholder="$0.00"
+                    readOnly
+                    type="text"
+                    value={`$ ${promptPrices[model].toFixed(4)}`}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
-    </>
+        )}
+      </div>
+    </div>
   );
 }
