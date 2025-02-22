@@ -57,7 +57,7 @@ export function ExcelFileForm() {
   }
   return (
     <>
-      <p className="text-gray-500 dark:text-gray-400 text-accent">
+      <p className="dark:text-gray-400 text-accent">
         Upload an XLSX file with two sheets, one named{" "}
         <span className="font-mono">input</span> and the other named{" "}
         <span className="font-mono">output</span>.

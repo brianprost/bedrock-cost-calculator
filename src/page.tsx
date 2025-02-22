@@ -5,6 +5,14 @@ import { Textarea } from "@/components/ui/textarea"
 import { encode } from "gpt-tokenizer"
 import { PricingPanel } from "./components/pricing-panel"
 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
 const MODELS = {
   "Claude 3 Opus": "us.anthropic.claude-3-opus-20240229-v1:0",
   "Claude 3.5 Sonnet": "us.anthropic.claude-3-5-sonnet-20241022-v2:0",
@@ -50,7 +58,10 @@ and joined back to nature,
 returned to our mammal
 brothers and sisters,
 and all watched over
-by machines of loving grace.`
+by machines of loving grace.
+
+- Richard Brautigan
+`
 
 const PRICING = {
   "Claude 3.5 Sonnet": {
@@ -87,29 +98,41 @@ const PRICING = {
   },
 }
 
+/**
+ * ## I don't know what color theory is
+ */
 function getTokenColor(tokenId: number): string {
-  const hue = (tokenId * 137.508) % 360
+  const hue = (tokenId * 161.9) % 360
   return `hsl(${hue}, 70%, 75%)`
 }
 
 function tokenize(text: string): Token[] {
   const tokenIds = encode(text)
-  let currentIndex = 0
   const tokens: Token[] = []
-
+  
+  // Split the text into utf-8 characters
+  const chars = Array.from(text)
+  let currentIndex = 0
+  
   for (const id of tokenIds) {
-    const tokenText =
-      text.slice(currentIndex).match(/^[\s\S]+?(?=\s|$)/)?.[0] || text.slice(currentIndex, currentIndex + 1)
-
+    // Take characters until we match the next token boundary
+    let tokenText = ''
+    while (currentIndex < chars.length) {
+      tokenText += chars[currentIndex]
+      currentIndex++
+      
+      // Try encoding the current token text
+      const check = encode(tokenText)
+      if (check[0] === id) break
+    }
+    
     tokens.push({
       id,
       text: tokenText,
       color: getTokenColor(id),
     })
-
-    currentIndex += tokenText.length
   }
-
+  
   return tokens
 }
 
@@ -133,11 +156,11 @@ export default function TokenizerPage() {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-4xl font-bold mb-6">Bedrock Cost Calculator</h1>
+      <h1 className="text-4xl text-primary font-bold mb-6">Bedrock Cost Calculator</h1>
 
       <div className="space-y-6">
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold">View LLM tokenization and calculate their cost</h2>
+          <h2 className="text-2xl font-semibold">View LLM tokenization and calculate costs across select models on Amazon Bedrock.</h2>
 
           <p className="text-lg text-muted-foreground">
           Large language models (LLMs) handle text by breaking it into tokens, which are frequent character sequences in a dataset. These models grasp the statistical connections among tokens, excelling in predicting the next token in a sequence.
@@ -152,7 +175,7 @@ export default function TokenizerPage() {
             <Button variant="destructive" onClick={() => setText("")}>
               Clear
             </Button>
-            <Button variant="ghost" onClick={() => setText(exampleText)}>
+            <Button variant="link" onClick={() => setText(exampleText)}>
               Show example
             </Button>
           </div>
@@ -185,19 +208,13 @@ export default function TokenizerPage() {
             <TabsContent value="text">
               <div className="p-4 bg-muted rounded-lg min-h-[100px] font-mono">
                 <div className="flex flex-wrap gap-1">
-                  {/* {tokens.map((token, i) => token.text.length >= 1 && ( */}
                   {tokens.map((token, i) => (
                     <span
                       key={i}
                       style={{ backgroundColor: token.color }}
-                      className="rounded px-1 py-0.5 relative group cursor-help border border-gray-300 shadow-sm transition-all duration-200 ease-in-out hover:shadow-md"
+                      className="rounded px-1 py-0.5 relative border border-gray-300 shadow-sm transition-all duration-200 ease-in-out hover:shadow-md"
                     >
                       {token.text}
-                      {/* <div className="absolute bottom-full left-1/2 -translate-x-1/2 translate-y-4 mb-2 px-3 py-2 bg-popover text-popover-foreground text-sm rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-10 w-max">
-                        <div className="font-bold mb-1">Token ID: {token.id}</div>
-                        <div>Text: "{token.text}"</div>
-                        <div>Length: {token.text.length} character(s)</div>
-                      </div> */}
                     </span>
                   ))}
                 </div>
@@ -205,24 +222,24 @@ export default function TokenizerPage() {
             </TabsContent>
             <TabsContent value="token-ids">
               <div className="p-4 bg-muted rounded-lg min-h-[100px] font-mono">
-                <div className="grid grid-cols-[auto,1fr,auto] gap-x-4 gap-y-2">
-                  <div className="font-bold">ID</div>
-                  <div className="font-bold">Text</div>
-                  <div className="font-bold">Length</div>
-                  {tokens.map((token, i) => (
-                    <>
-                      <div key={`id-${i}`} className="text-muted-foreground">
-                        {token.id}
-                      </div>
-                      <div key={`text-${i}`} className="font-normal">
-                        {JSON.stringify(token.text)}
-                      </div>
-                      <div key={`length-${i}`} className="text-muted-foreground">
-                        {token.text.length}
-                      </div>
-                    </>
-                  ))}
-                </div>
+                <Table>
+                  <TableHeader>
+                  <TableRow className="hover:bg-transparent">
+                    <TableCell className="font-bold">ID</TableCell>
+                    <TableCell className="font-bold">Text</TableCell>
+                    <TableCell className="font-bold">Length</TableCell>
+                  </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {tokens.map((token, i) => (
+                      <TableRow key={i} className="hover:bg-transparent">
+                        <TableCell className="text-muted-foreground">{token.id}</TableCell>
+                        <TableCell className="font-normal">{JSON.stringify(token.text)}</TableCell>
+                        <TableCell className="text-muted-foreground">{token.text.length}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </div>
             </TabsContent>
             <TabsContent value="pricing">

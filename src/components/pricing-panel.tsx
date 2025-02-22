@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { TransitionPanel } from '@/components/ui/transition-panel';
 
 export function PricingPanel({
