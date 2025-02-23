@@ -8,6 +8,7 @@ import { TokenTable } from "@/components/token-table"
 import { TokenText } from "@/components/token-text"
 import { exampleText } from "./lib/data"
 import { calculatePrices, tokenize } from "./lib/tokenization"
+import { VercelTabs } from "./components/ui/vercel-tabs"
 
 export default function App() {
 	inject()
@@ -28,8 +29,8 @@ export default function App() {
 			<div className="space-y-6">
 				<div className="space-y-4">
 					<h2 className="text-2xl font-semibold">
-						View LLM tokenization and calculate costs across select models on
-						Amazon Bedrock.
+						A handy tool to view tokenization and to estimate costs for Amazon
+						Bedrock workloads.
 					</h2>
 
 					<p className="text-lg text-muted-foreground">
@@ -41,7 +42,11 @@ export default function App() {
 
 					<p className="text-muted-foreground">
 						Try the tool below to see how text could be tokenized by a language
-						model and count the total number of tokens for your text.
+						model and count the total number of tokens for your text.{" "}
+						<span className="text-sm font-semibold">
+							This process runs in your browser and does not send any data to a
+							server.
+						</span>
 					</p>
 				</div>
 
@@ -73,14 +78,16 @@ export default function App() {
 				</div>
 
 				<div className="space-y-4">
-					<Tabs
-						value={activeTab}
-						onValueChange={(v) => setActiveTab(v as typeof activeTab)}
-					>
+					<Tabs value={activeTab}>
 						<TabsList>
-							<TabsTrigger value="text">Text</TabsTrigger>
-							<TabsTrigger value="token-ids">Token IDs</TabsTrigger>
-							<TabsTrigger value="pricing">Pricing</TabsTrigger>
+							<VercelTabs
+								tabs={[
+									{ id: "text", label: "Text" },
+									{ id: "token-ids", label: "Token IDs" },
+									{ id: "pricing", label: "Pricing" },
+								]}
+								onTabChange={(id) => setActiveTab(id as typeof activeTab)}
+							/>
 						</TabsList>
 						<TabsContent value="text">
 							<div className="p-4 bg-muted rounded-lg min-h-[100px]">
