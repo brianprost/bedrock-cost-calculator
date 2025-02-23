@@ -1,11 +1,8 @@
-module.exports = {
-  darkMode: ["class"],
+import type { Config } from 'tailwindcss'
+
+const config = {
   content: [
-    "./pages/**/*.{ts,tsx}",
-    "./components/**/*.{ts,tsx}",
-    "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
-    "*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     container: {
@@ -16,6 +13,9 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ["Open Sans Variable", "sans-serif"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -46,5 +46,7 @@ module.exports = {
       },
     },
   },
-}
+} satisfies Config;
+
+export default config;
 
