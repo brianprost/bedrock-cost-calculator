@@ -20,7 +20,8 @@ export function PricingPanel({
 			<div className="mb-4 flex space-x-2">
 				{items.map((item, index) => (
 					<button
-						key={index}
+						type="button"
+						key={`btn_${item.modelId}`}
 						onClick={() => setActiveIndex(index)}
 						className={`rounded-md px-3 py-1 text-sm font-medium ${
 							activeIndex === index
@@ -42,8 +43,8 @@ export function PricingPanel({
 						exit: { opacity: 0, x: 50, filter: "blur(4px)" },
 					}}
 				>
-					{items.map((item, index) => (
-						<div key={index} className="py-2">
+					{items.map((item) => (
+						<div key={item.modelId} className="py-2">
 							<h3 className="mb-2 font-medium text-zinc-800 dark:text-zinc-100">
 								Estimated Pricing for {item.modelName}
 							</h3>

@@ -1,4 +1,11 @@
-import * as React from "react"
+import {
+	forwardRef,
+	useEffect,
+	useRef,
+	useState,
+	type Ref,
+	type TextareaHTMLAttributes,
+} from "react"
 import { cn } from "@/lib/utils"
 import { useImperativeHandle } from "react"
 
@@ -15,8 +22,8 @@ export const useAutosizeTextArea = ({
 	maxHeight = Number.MAX_SAFE_INTEGER,
 	minHeight = 0,
 }: UseAutosizeTextAreaProps) => {
-	const [init, setInit] = React.useState(true)
-	React.useEffect(() => {
+	const [init, setInit] = useState(true)
+	useEffect(() => {
 		// We need to reset the height momentarily to get the correct scrollHeight for the textarea
 		const offsetBorder = 2
 		if (textAreaRef) {
@@ -37,7 +44,7 @@ export const useAutosizeTextArea = ({
 				textAreaRef.style.height = `${scrollHeight + offsetBorder}px`
 			}
 		}
-	}, [textAreaRef, triggerAutoSize])
+	}, [textAreaRef, init, minHeight, maxHeight])
 }
 
 export type AutosizeTextAreaRef = {
@@ -49,9 +56,9 @@ export type AutosizeTextAreaRef = {
 type AutosizeTextAreaProps = {
 	maxHeight?: number
 	minHeight?: number
-} & React.TextareaHTMLAttributes<HTMLTextAreaElement>
+} & TextareaHTMLAttributes<HTMLTextAreaElement>
 
-export const AutosizeTextarea = React.forwardRef<
+export const AutosizeTextarea = forwardRef<
 	AutosizeTextAreaRef,
 	AutosizeTextAreaProps
 >(
@@ -64,10 +71,10 @@ export const AutosizeTextarea = React.forwardRef<
 			value,
 			...props
 		}: AutosizeTextAreaProps,
-		ref: React.Ref<AutosizeTextAreaRef>,
+		ref: Ref<AutosizeTextAreaRef>,
 	) => {
-		const textAreaRef = React.useRef<HTMLTextAreaElement | null>(null)
-		const [triggerAutoSize, setTriggerAutoSize] = React.useState("")
+		const textAreaRef = useRef<HTMLTextAreaElement | null>(null)
+		const [triggerAutoSize, setTriggerAutoSize] = useState("")
 
 		useAutosizeTextArea({
 			textAreaRef: textAreaRef.current,
@@ -83,9 +90,9 @@ export const AutosizeTextarea = React.forwardRef<
 			minHeight,
 		}))
 
-		React.useEffect(() => {
+		useEffect(() => {
 			setTriggerAutoSize(value as string)
-		}, [props?.defaultValue, value])
+		}, [value])
 
 		return (
 			<textarea

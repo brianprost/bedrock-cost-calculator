@@ -93,33 +93,7 @@ export const getModelPrice = (
 	return (numTokens / 1000) * prices[modelName][inOrOut]
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const countTokens = (text: string | null, encoding: any): number => {
 	return text ? encoding.encode(text).length : 0
 }
-
-// (async () => {
-//   const inputTokenCount = 585 * 2100000;
-//   const outputTokenCount = 10 * 2100000;
-
-//   const inputPriceCalculations: { [key: string]: string } = {};
-//   models.forEach((model) => {
-//     inputPriceCalculations[model] = `$${getModelPrice(
-//       model,
-//       inputTokenCount,
-//       "input"
-//     ).toFixed(2)}`;
-//   });
-
-//   const outputPriceCalculations: { [key: string]: string } = {};
-//   models.forEach((model) => {
-//     outputPriceCalculations[model] = `$${getModelPrice(
-//       model,
-//       outputTokenCount,
-//       "output"
-//     ).toFixed(2)}`;
-//   });
-
-//   console.log({ inputPriceCalculations });
-//   console.log({ outputPriceCalculations });
-// })();

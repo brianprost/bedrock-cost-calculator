@@ -8,9 +8,9 @@ export async function calculatePromptCost(prompt: string) {
 	const inputTokens = countTokens(prompt, encoding)
 
 	const inputPriceCalculations: { [key: string]: number } = {}
-	models.forEach((model) => {
+	for (const model of models) {
 		inputPriceCalculations[model] = getModelPrice(model, inputTokens, "input")
-	})
+	}
 
 	return {
 		inputTokens,
@@ -57,26 +57,26 @@ export async function calculateTokenCost(file: File): Promise<{
 		const text = await file.text()
 		const results = Papa.parse<string[]>(text, { header: false })
 
-		results.data.forEach((row) => {
-			row.forEach((cell) => {
+		for (const row of results.data) {
+			for (const cell of row) {
 				inputTokens += countTokens(cell, encoding)
-			})
-		})
+			}
+		}
 	}
 
 	const inputPriceCalculations: { [key: string]: number } = {}
-	models.forEach((model) => {
+	for (const model of models) {
 		inputPriceCalculations[model] = getModelPrice(model, inputTokens, "input")
-	})
+	}
 
 	const outputPriceCalculations: { [key: string]: number } = {}
-	models.forEach((model) => {
+	for (const model of models) {
 		outputPriceCalculations[model] = getModelPrice(
 			model,
 			outputTokens,
 			"output",
 		)
-	})
+	}
 
 	return {
 		inputTokens,

@@ -136,7 +136,7 @@ function calculatePrices(tokenCount: number) {
 	}))
 }
 
-export default function TokenizerPage() {
+export default function App() {
 	inject()
 	const [text, setText] = useState("")
 	const [activeTab, setActiveTab] = useState<"text" | "token-ids" | "pricing">(

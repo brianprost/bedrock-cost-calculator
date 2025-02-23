@@ -14,7 +14,7 @@ export function PromptForm() {
 		{},
 	)
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	const handleSubmit = async (event: any) => {
 		event.preventDefault()
 		setCalculating(true)
@@ -65,8 +65,8 @@ export function PromptForm() {
 							Estimated Token Input Cost for {tokenCount} tokens
 						</Label>
 						<div className="grid grid-cols-2 gap-2">
-							{Object.keys(promptPrices).map((model, index) => (
-								<div className="flex flex-col gap-1" key={`input_${index}`}>
+							{Object.keys(promptPrices).map((model) => (
+								<div className="flex flex-col gap-1" key={`input_${model}`}>
 									<Label htmlFor={model} className="text-sm">
 										{getModelLabel(model as ModelName)}
 									</Label>

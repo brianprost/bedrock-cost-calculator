@@ -83,10 +83,10 @@ export function ExcelFileForm() {
 										Estimated Token Input Cost for {inputTokens} tokens
 									</Label>
 									<div className="grid grid-cols-2 gap-2">
-										{Object.keys(inputPrices).map((model, index) => (
+										{Object.keys(inputPrices).map((model) => (
 											<div
 												className="flex flex-col gap-2"
-												key={`input_${index}`}
+												key={`input_${model}`}
 											>
 												<Label key={model} htmlFor={model} className="text-lg">
 													{getModelLabel(model as ModelName)}
@@ -110,10 +110,10 @@ export function ExcelFileForm() {
 										Estimated Token Output Cost for {outputTokens} tokens
 									</Label>
 									<div className="grid grid-cols-2 gap-2">
-										{Object.keys(outputPrices).map((model, index) => (
+										{Object.keys(outputPrices).map((model) => (
 											<div
 												className="flex flex-col gap-2"
-												key={`output_${index}`}
+												key={`output_${model}`}
 											>
 												<Label key={model} htmlFor={model} className="text-lg">
 													{getModelLabel(model as ModelName)}
