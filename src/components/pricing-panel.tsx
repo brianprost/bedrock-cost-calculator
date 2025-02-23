@@ -1,4 +1,4 @@
-'use client';
+
 import { useState } from 'react';
 import { TransitionPanel } from '@/components/ui/transition-panel';
 

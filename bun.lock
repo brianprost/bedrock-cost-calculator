@@ -4,7 +4,8 @@
     "": {
       "name": "bedrock-token-cost",
       "dependencies": {
-        "@fontsource/barlow": "^5.1.1",
+        "@fontsource/ubuntu": "^5.1.1",
+        "@fontsource/ubuntu-mono": "^5.1.1",
         "@radix-ui/react-checkbox": "^1.1.4",
         "@radix-ui/react-label": "^2.1.2",
         "@radix-ui/react-popover": "^1.1.6",
@@ -127,7 +128,9 @@
 
     "@floating-ui/utils": ["@floating-ui/utils@0.2.9", "", {}, "sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg=="],
 
-    "@fontsource/barlow": ["@fontsource/barlow@5.1.1", "", {}, "sha512-41BWOY3bZg0Hc7eQkeMEFIPUIt2wkVYHhfhlV8VVVaiRBdQw5JY8NT9qpB3Z/IKZ9dQuhHzUjuQJu9ALmjEwig=="],
+    "@fontsource/ubuntu": ["@fontsource/ubuntu@5.1.1", "", {}, "sha512-ghyIHIsqbBkUMA3zjvCIQENHl4CEhNgKrVxsuuC46XKw5Yfiy4C3W/A0eLGBR4+yre39b/1sVVsjK6VByVMAtg=="],
+
+    "@fontsource/ubuntu-mono": ["@fontsource/ubuntu-mono@5.1.1", "", {}, "sha512-R81WHFRcm8R78u24PehYiHsRTTth6ZRbA1nKKhKYnvqW92J7BNbH7NETwEPmxFlTLM3rGnqfoP1tvBczBeWRpg=="],
 
     "@humanfs/core": ["@humanfs/core@0.19.1", "", {}, "sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA=="],
 
