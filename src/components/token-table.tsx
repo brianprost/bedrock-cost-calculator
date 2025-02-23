@@ -22,7 +22,9 @@ export function TokenTable({ tokens }: { tokens: Token[] }) {
 				<TableBody>
 					{tokens.map((token) => (
 						<TableRow key={token.id}>
-							<TableCell className="font-mono font-bold">{token.tokenId}</TableCell>
+							<TableCell className="font-mono font-bold">
+								{token.tokenId}
+							</TableCell>
 							<TableCell>{JSON.stringify(token.text)}</TableCell>
 							<TableCell>{token.text.length}</TableCell>
 						</TableRow>
