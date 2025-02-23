@@ -6,11 +6,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table"
-export type Token = {
-	text: string
-	id: number
-	color: string
-}
+import type { Token } from "@/lib/types"
 
 export function TokenTable({ tokens }: { tokens: Token[] }) {
 	return (
@@ -26,7 +22,7 @@ export function TokenTable({ tokens }: { tokens: Token[] }) {
 				<TableBody>
 					{tokens.map((token) => (
 						<TableRow key={token.id}>
-							<TableCell className="font-mono font-bold">{token.id}</TableCell>
+							<TableCell className="font-mono font-bold">{token.tokenId}</TableCell>
 							<TableCell>{JSON.stringify(token.text)}</TableCell>
 							<TableCell>{token.text.length}</TableCell>
 						</TableRow>

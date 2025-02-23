@@ -13,5 +13,6 @@ export default defineConfig({
 	},
 	build: {
 		target: "ES2023",
+		chunkSizeWarningLimit: 2048,
 	},
 })

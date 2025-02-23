@@ -29,7 +29,7 @@ export function PricingTable({ items }: { items: LLMPricing[] }) {
 				</TableHeader>
 				<TableBody>
 					{items.map((llm) => (
-						<TableRow key={llm.modelId}>
+						<TableRow key={`token_pricing_${llm.modelId}`}>
 							<TableCell>{llm.modelName}</TableCell>
 							<TableCell>${llm.pricing.input.toFixed(6)}</TableCell>
 							<TableCell>${llm.pricing.output.toFixed(6)}</TableCell>

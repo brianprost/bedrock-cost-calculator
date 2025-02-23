@@ -8,7 +8,7 @@
 	"files": {
 		"ignoreUnknown": false,
 		"ignore": [],
-		"maxSize": 2048000 // because WASM
+		"maxSize": 2048000 // increased because embeddings are bigggg
 	},
 	"formatter": {
 		"enabled": true,
