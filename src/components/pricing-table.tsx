@@ -6,6 +6,11 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table"
+import {
+	HoverCard,
+	HoverCardContent,
+	HoverCardTrigger,
+} from "@/components/ui/hover-card"
 
 type LLMPricing = {
 	modelName: string
@@ -31,8 +36,33 @@ export function PricingTable({ items }: { items: LLMPricing[] }) {
 					{items.map((llm) => (
 						<TableRow key={llm.modelId}>
 							<TableCell>{llm.modelName}</TableCell>
-							<TableCell>${llm.pricing.input.toFixed(6)}</TableCell>
-							<TableCell>${llm.pricing.output.toFixed(6)}</TableCell>
+							{Object.keys(llm.pricing).map((key) => (
+								<HoverCard key={key}>
+									<HoverCardTrigger asChild className="cursor-help">
+										<TableCell>${llm.pricing.input.toFixed(6)}</TableCell>
+									</HoverCardTrigger>
+									<HoverCardContent className="w-80">
+										<div className="flex space-x-4">
+											<div className="space-y-1">
+												<h4 className="text-sm font-semibold">
+													{llm.modelName}
+												</h4>
+												<p className="text-sm">
+													${llm.pricing.input.toFixed(6)} per 1k tokens
+												</p>
+												<div className="flex items-center pt-2">
+													<a
+														href="https://aws.amazon.com/bedrock/pricing/"
+														className="text-xs text-muted-foreground"
+													>
+														pricing as of 2025-03-14
+													</a>
+												</div>
+											</div>
+										</div>
+									</HoverCardContent>
+								</HoverCard>
+							))}
 						</TableRow>
 					))}
 				</TableBody>
