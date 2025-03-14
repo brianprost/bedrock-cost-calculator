@@ -11,6 +11,7 @@ import {
 	HoverCardContent,
 	HoverCardTrigger,
 } from "@/components/ui/hover-card"
+import { PRICING } from "@/lib/data"
 
 type LLMPricing = {
 	modelName: string
@@ -48,7 +49,12 @@ export function PricingTable({ items }: { items: LLMPricing[] }) {
 													{llm.modelName}
 												</h4>
 												<p className="text-sm">
-													${llm.pricing.input.toFixed(6)} per 1k tokens
+													$
+													{Object.keys(PRICING).includes(llm.modelName) &&
+														PRICING[llm.modelName as keyof typeof PRICING][
+															key as keyof typeof llm.pricing
+														].toFixed(5)}{" "}
+													per 1k tokens
 												</p>
 												<div className="flex items-center pt-2">
 													<a
