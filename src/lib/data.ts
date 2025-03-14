@@ -36,7 +36,7 @@ export const PRICING = {
 		output: 0.075,
 	},
 	"Claude 3 Opus (Batch)": {
-		input: 0.075,
+		input: 0.0075,
 		output: 0.0375,
 	},
 	"Claude 3 Haiku": {
