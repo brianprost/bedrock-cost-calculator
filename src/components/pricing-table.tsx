@@ -37,10 +37,12 @@ export function PricingTable({ items }: { items: LLMPricing[] }) {
 					{items.map((llm) => (
 						<TableRow key={llm.modelId}>
 							<TableCell>{llm.modelName}</TableCell>
-							{Object.keys(llm.pricing).map((key) => (
+							{["input", "output"].map((key) => (
 								<HoverCard key={key}>
 									<HoverCardTrigger asChild className="cursor-help">
-										<TableCell>${llm.pricing.input.toFixed(6)}</TableCell>
+										<TableCell>
+											${llm.pricing[key as keyof typeof llm.pricing].toFixed(6)}
+										</TableCell>
 									</HoverCardTrigger>
 									<HoverCardContent className="w-80">
 										<div className="flex space-x-4">
@@ -52,7 +54,7 @@ export function PricingTable({ items }: { items: LLMPricing[] }) {
 													$
 													{Object.keys(PRICING).includes(llm.modelName) &&
 														PRICING[llm.modelName as keyof typeof PRICING][
-															key as keyof typeof llm.pricing
+															key as keyof (typeof PRICING)[keyof typeof PRICING]
 														].toFixed(5)}{" "}
 													per 1k tokens
 												</p>
